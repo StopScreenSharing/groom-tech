@@ -70,7 +70,7 @@ class Logout(Resource):
         session.pop("groomer_id", None)
         return {}, 204
 
-
+print("REGISTERING ROUTES")
 api.add_resource(Signup, "/signup")
 api.add_resource(Login, "/login")
 api.add_resource(CheckSession, "/check_session")
