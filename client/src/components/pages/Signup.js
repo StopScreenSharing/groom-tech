@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppConetxt } from "../context/AppContext";
+import { AppContext } from "../context/AppContext";
 
 import {
     Box,
@@ -10,11 +10,11 @@ import {
     Paper
 } from "@mui/material";
 
-import { Formik, formik, validateYupSchema } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 
 const Signup = () => {
-    const { signup } = useContext(AppConetxt);
+    const { signup } = useContext(AppContext);
     const navigate = useNavigate();
 
     return (

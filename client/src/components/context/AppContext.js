@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 
-export const AppConetxt = createContext();
+export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const [groomer, setGroomer] = useState(null);
@@ -9,7 +9,7 @@ export const AppProvider = ({ children }) => {
     const checkSession = async () => {
         try {
             const res = await fetch("/check_session", {
-                credentials: "inlcude",
+                credentials: "include",
             });
             if (res.ok) {
                 const data = await res.json();
@@ -74,10 +74,10 @@ export const AppProvider = ({ children }) => {
     }, []);
 
     return (
-        <AppConetxt.Provider
+        <AppContext.Provider
         value={{ groomer, loading, login, signup, logout }}
         >
             {children}
-        </AppConetxt.Provider>
+        </AppContext.Provider>
     );
 };
