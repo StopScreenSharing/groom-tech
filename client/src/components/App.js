@@ -6,9 +6,9 @@ import NavBar from "./NavBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import AddOwner from "./pages/AddOwner";
-import AddDog from "./pages/AddDog";
-import AddAppointment from "./pages/AddAppointment";
+// import AddOwner from "./pages/AddOwner";
+// import AddDog from "./pages/AddDog";
+// import AddAppointment from "./pages/AddAppointment";
 
 function App() {
   return (
