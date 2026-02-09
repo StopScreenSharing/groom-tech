@@ -24,7 +24,7 @@ function Login() {
     const navigate = useNavigate();
     const { login, groomer } = useContext(AppContext);
 
-    // 🔐 Redirect if already logged in
+    //  if already logged in
     useEffect(() => {
         if (groomer) {
             navigate("/", { replace: true });
