@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
 import NavBar from "./NavBar";
@@ -28,7 +28,7 @@ function App() {
           }
         />
 
-        <Route path="/owners/new" element={
+        {/* <Route path="/owners/new" element={
             <ProtectedRoute >
                 <AddOwner />
             </ProtectedRoute>
@@ -47,7 +47,7 @@ function App() {
                 <AddAppointment />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         //catch 
         <Route path="*" element={<Navigate to="/" />} />

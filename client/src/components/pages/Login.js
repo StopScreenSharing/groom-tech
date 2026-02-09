@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     Box,
@@ -11,15 +11,25 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
+import { AppContext } from "../AppContext";
+
 const LoginSchema = Yup.object({
     employee_number: Yup.string()
-    .matches(/^\d{4}$/, "Employee number must be 4 digits")
-    .required("Employee number is required"),
+        .matches(/^\d{4}$/, "Employee number must be 4 digits")
+        .required("Employee number is required"),
     password: Yup.string().required("Password is required"),
 });
 
 function Login() {
     const navigate = useNavigate();
+    const { login, groomer } = useContext(AppContext);
+
+    // 🔐 Redirect if already logged in
+    useEffect(() => {
+        if (groomer) {
+            navigate("/", { replace: true });
+        }
+    }, [groomer, navigate]);
 
     return (
         <Container maxWidth="sm">
@@ -35,27 +45,21 @@ function Login() {
                     }}
                     validationSchema={LoginSchema}
                     onSubmit={async (values, { setSubmitting, setErrors }) => {
-                        try {
-                            const res = await fetch("/login", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(values),
-                            });
+                        const result = await login(
+                            values.employee_number,
+                            values.password
+                        );
 
-                            if (!res.ok) {
-                                const err = await res.json();
-                                setErrors({ server: err.error || "Login failed "});
-                                return;
-                            }
-                            // On success
-                            await res.json();
-                            navigate("/");
-                        } catch (error) {
-                            setErrors({ server: "Something went wrong" });
-                        } finally {
-                            setSubmitting(false);
+                        setSubmitting(false);
+
+                        if (result === true) {
+                            navigate("/", { replace: true });
+                        } else {
+                            setErrors({
+                                server:
+                                    result.error ||
+                                    "Invalid employee number or password",
+                            });
                         }
                     }}
                 >
@@ -70,7 +74,7 @@ function Login() {
                     }) => (
                         <form onSubmit={handleSubmit}>
                             {errors.server && (
-                                <Alert severity="error" sx={{ mb:2 }}>
+                                <Alert severity="error" sx={{ mb: 2 }}>
                                     {errors.server}
                                 </Alert>
                             )}
@@ -83,8 +87,14 @@ function Login() {
                                 value={values.employee_number}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={touched.employee_number && Boolean(errors.employee_number)}
-                                helperText={touched.employee_number && errors.employee_number}
+                                error={
+                                    touched.employee_number &&
+                                    Boolean(errors.employee_number)
+                                }
+                                helperText={
+                                    touched.employee_number &&
+                                    errors.employee_number
+                                }
                             />
 
                             <TextField
@@ -96,8 +106,13 @@ function Login() {
                                 value={values.password}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                error={touched.password && Boolean(errors.password)}
-                                helperText={touched.password && errors.password}
+                                error={
+                                    touched.password &&
+                                    Boolean(errors.password)
+                                }
+                                helperText={
+                                    touched.password && errors.password
+                                }
                             />
 
                             <Button
