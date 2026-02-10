@@ -11,17 +11,16 @@ from config import app, db, api
 # Add your model imports
 from models import Groomer, Owner, Dog, Appointment
 from schemas import (
+    ma,
     GroomerSchema,
-    GroomerDashboardSchema,
     OwnerSchema,
     DogSchema,
-    AppointmentSchema,
-    AppointmentDetailSchema
+    AppointmentSchema
 )
 from datetime import date
 
 
-
+ma.init_app(app)
 # Views go here!
 
 class Signup(Resource):
@@ -63,7 +62,7 @@ class CheckSession(Resource):
            return {"message": "Not Authorized"}, 401
 
        groomer = Groomer.query.get(groomer_id)
-       return GroomerDashboardSchema().dump(groomer), 200        
+       return GroomerSchema().dump(groomer), 200        
 
 class Logout(Resource):
     def delete(self):
