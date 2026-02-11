@@ -11,8 +11,10 @@ export const AppProvider = ({ children }) => {
             const res = await fetch("/check_session", {
                 credentials: "include",
             });
+            console.log("check_session response:", res);
             if (res.ok) {
                 const data = await res.json();
+                console.log("check_session JSON:", data);
                 setGroomer(data);
             } else {
                 setGroomer(null);
