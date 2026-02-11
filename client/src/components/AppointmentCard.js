@@ -37,7 +37,7 @@ const AppointmentCard = ({ appointment }) => {
                     </Typography>
 
                     <Typography>
-                        Owner: {appointment.owner?.name}
+                        Owner: {appointment.dog?.owner?.name}
                     </Typography>
 
                     {appointment.note && (

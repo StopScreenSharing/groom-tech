@@ -9,6 +9,7 @@ import Signup from "./pages/Signup";
 // import AddOwner from "./pages/AddOwner";
 // import AddDog from "./pages/AddDog";
 // import AddAppointment from "./pages/AddAppointment";
+import AppointmentDetail from "./pages/AppointmentDetail";
 
 function App() {
   return (
@@ -26,6 +27,15 @@ function App() {
                 <Home />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+        path="/appointments/:id"
+        element={
+          <ProtectedRoute>
+            <AppointmentDetail />
+          </ProtectedRoute>
+        }
         />
 
         {/* <Route path="/owners/new" element={
