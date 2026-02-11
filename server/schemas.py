@@ -23,7 +23,7 @@ class OwnerSchema(ma.SQLAlchemyAutoSchema):
     name = ma.auto_field()
     phone_number = ma.auto_field()
 
-    dogs = fields.Nested("DogSchema", many=True, exclude=("owner", "appointment"))
+    dogs = fields.Nested("DogSchema", many=True, exclude=("owner", "appointments"))
 
 
 class DogSchema(ma.SQLAlchemyAutoSchema):

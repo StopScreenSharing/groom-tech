@@ -6,7 +6,8 @@ import NavBar from "./NavBar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-// import AddOwner from "./pages/AddOwner";
+import AddOwner from "./pages/AddOwner";
+import Owners from "./pages/Owners";
 // import AddDog from "./pages/AddDog";
 // import AddAppointment from "./pages/AddAppointment";
 import AppointmentDetail from "./pages/AppointmentDetail";
@@ -38,21 +39,30 @@ function App() {
         }
         />
 
-        {/* <Route path="/owners/new" element={
+        <Route path="/owners/new" element={
             <ProtectedRoute >
                 <AddOwner />
             </ProtectedRoute>
           }
         />
 
+        <Route path="/owners"
+        element={
+          <ProtectedRoute>
+            <Owners />
+          </ProtectedRoute>
+        }
+        />
+
+{/* 
         <Route path="/dogs/new" element={
             <ProtectedRoute >
                 <AddDog />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
-        <Route path="/appointmnets/new" element={
+        {/* <Route path="/appointmnets/new" element={
             <ProtectedRoute >
                 <AddAppointment />
             </ProtectedRoute>
