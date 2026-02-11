@@ -13,6 +13,8 @@ class AppointmentSchema(ma.SQLAlchemyAutoSchema):
     service = ma.auto_field()
     note = ma.auto_field()
 
+    dog = fields.Nested("DogSchema")
+
 class OwnerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Owner
