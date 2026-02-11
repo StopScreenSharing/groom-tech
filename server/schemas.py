@@ -21,6 +21,8 @@ class OwnerSchema(ma.SQLAlchemyAutoSchema):
     name = ma.auto_field()
     phone_number = ma.auto_field()
 
+    dogs = fields.Nested("DogSchema", many=True, exclude=("owner", "appointment"))
+
 
 class DogSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -31,8 +33,8 @@ class DogSchema(ma.SQLAlchemyAutoSchema):
     name = ma.auto_field()
     breed = ma.auto_field()
 
-    owner = fields.Nested("OwnerSchema")
-    appointments = fields.Nested("AppointmentSchema", many=True)
+    owner = fields.Nested("OwnerSchema", only=("id", "name"))
+    appointments = fields.Nested("AppointmentSchema", many=True, exclude=("dog",))
 
 
 class GroomerSchema(ma.SQLAlchemyAutoSchema):
