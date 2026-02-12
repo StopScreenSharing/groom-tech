@@ -25,7 +25,6 @@ const AddOwner = () => {
     <Box sx={{ p: 4, display: "flex", justifyContent: "center" }}>
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 400 }}>
         
-        {/* 👇 THIS is the button you want */}
         <Button
           variant="outlined"
           onClick={() => navigate("/owners")}

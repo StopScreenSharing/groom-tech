@@ -8,7 +8,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AddOwner from "./pages/AddOwner";
 import Owners from "./pages/Owners";
-// import AddDog from "./pages/AddDog";
+import AddDog from "./pages/AddDog";
+import Dogs from "./pages/Dogs";
 // import AddAppointment from "./pages/AddAppointment";
 import AppointmentDetail from "./pages/AppointmentDetail";
 
@@ -54,13 +55,23 @@ function App() {
         }
         />
 
-{/* 
-        <Route path="/dogs/new" element={
+        <Route path="/dogs"
+        element={
+          <ProtectedRoute>
+            <Dogs />
+          </ProtectedRoute>
+        } 
+        />
+
+
+        <Route path="/dogs/new" 
+        element={
             <ProtectedRoute >
                 <AddDog />
             </ProtectedRoute>
           }
-        /> */}
+        />
+
 
         {/* <Route path="/appointmnets/new" element={
             <ProtectedRoute >

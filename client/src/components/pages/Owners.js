@@ -39,7 +39,7 @@ const Owners = () => {
           <Paper key={owner.id} sx={{ p: 2 }}>
             <Typography variant="h6">{owner.name}</Typography>
             <Typography color="text.secondary">
-              {owner.phone_number}
+              Number: {owner.phone_number}
             </Typography>
           </Paper>
         ))}
