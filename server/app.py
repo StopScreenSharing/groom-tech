@@ -204,7 +204,12 @@ class Dogs(Resource):
         if not groomer:
             return {"error": "Not authorized"}, 401
         
-        dogs = Dog.query.all()
+        show_all = request.args.get("all")
+
+        if show_all == "true":
+            dogs = Dog.query.all()
+        else: 
+            dogs = Dog.query.join(Appointment).filter(Appointment.groomer_id == groomer.id).distinct().all()
         return DogSchema(many=True).dump(dogs), 200
     
     def post(self):
@@ -231,6 +236,7 @@ class Dogs(Resource):
 
 
 
+
 print("REGISTERING ROUTES")
 api.add_resource(Signup, "/signup")
 api.add_resource(Login, "/login")
@@ -240,6 +246,7 @@ api.add_resource(Appointments, "/appointments")
 api.add_resource(AppointmentById, "/appointments/<int:id>")
 api.add_resource(Owners, "/owners")
 api.add_resource(Dogs, "/dogs")
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
