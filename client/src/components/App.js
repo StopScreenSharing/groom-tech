@@ -10,7 +10,8 @@ import AddOwner from "./pages/AddOwner";
 import Owners from "./pages/Owners";
 import AddDog from "./pages/AddDog";
 import Dogs from "./pages/Dogs";
-// import AddAppointment from "./pages/AddAppointment";
+import AddAppointment from "./pages/AddAppointment";
+
 import AppointmentDetail from "./pages/AppointmentDetail";
 
 function App() {
@@ -31,11 +32,27 @@ function App() {
           }
         />
 
-        <Route
+
+        <Route path="/appointments/new" element={
+            <ProtectedRoute >
+                <AddAppointment />
+            </ProtectedRoute>
+          }
+        />
+         
+         <Route
         path="/appointments/:id"
         element={
           <ProtectedRoute>
             <AppointmentDetail />
+          </ProtectedRoute>
+        }
+        />
+
+        <Route path="/owners"
+        element={
+          <ProtectedRoute>
+            <Owners />
           </ProtectedRoute>
         }
         />
@@ -47,14 +64,6 @@ function App() {
           }
         />
 
-        <Route path="/owners"
-        element={
-          <ProtectedRoute>
-            <Owners />
-          </ProtectedRoute>
-        }
-        />
-
         <Route path="/dogs"
         element={
           <ProtectedRoute>
@@ -63,7 +72,6 @@ function App() {
         } 
         />
 
-
         <Route path="/dogs/new" 
         element={
             <ProtectedRoute >
@@ -71,14 +79,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-
-        {/* <Route path="/appointmnets/new" element={
-            <ProtectedRoute >
-                <AddAppointment />
-            </ProtectedRoute>
-          }
-        /> */}
 
         //catch 
         <Route path="*" element={<Navigate to="/" />} />

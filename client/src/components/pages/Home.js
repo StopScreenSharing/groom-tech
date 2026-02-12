@@ -36,7 +36,8 @@ const Home = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" mb={3}>
+    <Typography variant="h4">Welcome, {}</Typography>
+      <Typography variant="h5" mb={3}>
         Upcoming Appointments
       </Typography>
 
