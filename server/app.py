@@ -209,7 +209,7 @@ class Dogs(Resource):
         if show_all == "true":
             dogs = Dog.query.all()
         else: 
-            dogs = Dog.query.join(Appointment).filter(Appointment.groomer_id == groomer.id).distinct().all()
+            dogs = groomer.dogs
         return DogSchema(many=True).dump(dogs), 200
     
     def post(self):

@@ -13,7 +13,7 @@ const Dogs = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/dogs")
+    fetch("/dogs", { credentials:"include"})
       .then((r) => {
         if (!r.ok) throw new Error("Failed to fetch dogs");
         return r.json();

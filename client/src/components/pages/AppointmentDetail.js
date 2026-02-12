@@ -42,7 +42,7 @@ const AppointmentDetail = () => {
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    fetch(`/appointments/${id}`)
+    fetch(`/appointments/${id}`, { credentials: "include" })
       .then((r) => {
         if (!r.ok) throw new Error("Not found");
         return r.json();
@@ -57,6 +57,7 @@ const AppointmentDetail = () => {
   const handleDelete = () => {
     fetch(`/appointments/${id}`, {
       method: "DELETE",
+      credentials: "include"
     }).then(() => navigate("/"));
   };
 
@@ -101,6 +102,7 @@ const AppointmentDetail = () => {
                   headers: {
                       "Content-Type": "application/json",
                   },
+                  credentials: "include",
                   body: JSON.stringify(values),
                 })
                   .then(async (r) => {

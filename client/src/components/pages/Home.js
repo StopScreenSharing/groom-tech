@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { AppContext } from "../../AppContext";
 import { useNavigate } from "react-router-dom";
 import {
     Box,
@@ -10,11 +11,12 @@ import {
 import AppointmentCard from "../AppointmentCard";
 
 const Home = () => {
+  const { groomer } = useContext(AppContext);
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/appointments")
+    fetch("/appointments", { credentials: "include"})
       .then((r) => {
         if (!r.ok) throw new Error("Failed to fetch appointments");
         return r.json();
@@ -36,7 +38,7 @@ const Home = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-    <Typography variant="h4">Welcome, {}</Typography>
+    <Typography variant="h4">Welcome, {groomer?.name}</Typography>
       <Typography variant="h5" mb={3}>
         Upcoming Appointments
       </Typography>

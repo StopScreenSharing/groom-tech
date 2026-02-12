@@ -6,20 +6,30 @@ import AppointmentForm from "../AppointmentForm";
 const AddAppointment = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    const res = await fetch("/appointments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(values),
-    });
+  const handleSubmit = async (values, { setSubmitting, setStatus }) => {
+    setStatus(null);
 
-    setSubmitting(false);
+    try {
+        const res = await fetch("/appointments", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(values),
+        });
 
-    if (res.ok) {
-      navigate("/");
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || "Failed to create appointment");
     }
-  };
+
+    navigate("/");
+  } catch (err) {
+    setStatus(err.message);
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   return (
     <Box sx={{ p: 4, display: "flex", justifyContent: "center" }}>

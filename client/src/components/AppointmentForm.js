@@ -20,7 +20,7 @@ const AppointmentForm = ({ onSubmit }) => {
   const [dogs, setDogs] = useState([]);
 
   useEffect(() => {
-    fetch("/dogs", { credentials: "include" })
+    fetch("/dogs?all=true", { credentials: "include" })
       .then(r => r.json())
       .then(setDogs);
   }, []);
