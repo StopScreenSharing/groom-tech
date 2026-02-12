@@ -8,7 +8,30 @@ import {
   Button,
   Stack,
   CircularProgress,
+  MenuItem,
+  Alert
 } from "@mui/material";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+const SERVICES = [
+  "Bath",
+  "Nails",
+  "Brush",
+  "Full Groom",
+];
+
+
+const AppointmentSchema = Yup.object({
+  date: Yup.date()
+    .min(
+      new Date().toISOString().split("T")[0],
+      "Date cannot be in the past"
+    )
+    .required("Date is required"),
+  service: Yup.string().required("Service is required"),
+  note: Yup.string(),
+});
 
 const AppointmentDetail = () => {
   const { id } = useParams();
@@ -18,12 +41,6 @@ const AppointmentDetail = () => {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
 
-  const [formData, setFormData] = useState({
-    date: "",
-    service: "",
-    note: "",
-  });
-
   useEffect(() => {
     fetch(`/appointments/${id}`)
       .then((r) => {
@@ -32,37 +49,10 @@ const AppointmentDetail = () => {
       })
       .then((data) => {
         setAppointment(data);
-        setFormData({
-          date: data.date,
-          service: data.service,
-          note: data.note || "",
-        });
         setLoading(false);
       })
       .catch(() => navigate("/", { replace: true }));
   }, [id, navigate]);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleUpdate = () => {
-    fetch(`/appointments/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((r) => r.json())
-      .then((updated) => {
-        setAppointment(updated);
-        setEditing(false);
-      });
-  };
 
   const handleDelete = () => {
     fetch(`/appointments/${id}`, {
@@ -94,37 +84,119 @@ const AppointmentDetail = () => {
             <strong>Owner:</strong> {appointment.dog.owner.name}
           </Typography>
 
+
           {editing ? (
-            <>
-              <TextField
-                label="Date"
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
-              />
+            <Formik
+              initialValues={{
+                date: appointment.date,
+                service: appointment.service,
+                note: appointment.note || "",
+              }}
+              validationSchema={AppointmentSchema}
+              onSubmit={(values, { setSubmitting, setStatus }) => {
+                setStatus(null);
 
-              <TextField
-                label="Service"
-                name="service"
-                value={formData.service}
-                onChange={handleChange}
-              />
+                fetch(`/appointments/${id}`, {
+                  method: "PATCH",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(values),
+                })
+                  .then(async (r) => {
+                    const data = await r.json();
 
-              <TextField
-                label="Note"
-                name="note"
-                value={formData.note}
-                onChange={handleChange}
-                multiline
-                rows={3}
-              />
+                    if (!r.ok) {
+                      throw new Error(data.error || "Update failed");
+                    }
 
-              <Button variant="contained" onClick={handleUpdate}>
-                Save Changes
-              </Button>
-            </>
+                    setAppointment(data);
+                    setEditing(false);
+                  })
+                  .catch((err) => {
+                    setStatus(err.message);
+                  })
+                  .finally(() => setSubmitting(false));
+                }}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+                status
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Stack spacing={2}>
+
+                    {status && (
+                      <Alert severity="error">
+                        {status}
+                      </Alert>
+                    )}
+                    <TextField
+                      label="Date"
+                      type="date"
+                      name="date"
+                      value={values.date}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{ shrink: true }}
+                      inputProps={{
+                        min: new Date().toISOString().split("T")[0],
+                      }}
+                      error={touched.date && Boolean(errors.date)}
+                      helperText={touched.date && errors.date}
+                    />
+
+                    <TextField
+                      select
+                      label="Service"
+                      name="service"
+                      value={values.service}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.service && Boolean(errors.service)}
+                      helperText={touched.service && errors.service}
+                    >
+                      {SERVICES.map((service) => (
+                        <MenuItem key={service} value={service}>
+                          {service}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+
+                    <TextField
+                      label="Note"
+                      name="note"
+                      value={values.note}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      multiline
+                      rows={3}
+                    />
+
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={isSubmitting}
+                    >
+                      Save Changes
+                    </Button>
+
+                    <Button
+                      variant="outlined"
+                      onClick={() => setEditing(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </Stack>
+                </form>
+              )}
+            </Formik>
           ) : (
             <>
               <Typography>
@@ -165,3 +237,4 @@ const AppointmentDetail = () => {
 };
 
 export default AppointmentDetail;
+

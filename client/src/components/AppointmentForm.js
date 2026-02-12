@@ -9,10 +9,10 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 const SERVICES = [
-  "Bath",
-  "Haircut",
-  "Nail Trim",
-  "Full Groom",
+ "Bath", 
+ "Nails", 
+ "Brush", 
+ "Full Groom"
 ];
 
 const AppointmentForm = ({ onSubmit }) => {
