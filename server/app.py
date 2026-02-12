@@ -7,6 +7,7 @@ import resource
 from flask import request, session
 from flask_migrate import current
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
 
 # Local imports
 from config import app, db, api
@@ -35,19 +36,30 @@ class Signup(Resource):
     def post(self):
         data = request.get_json()
 
-        groomer = Groomer(
-            name=data["name"],
-            employee_number=data["employee_number"],
-            phone_number=data["phone_number"]
-        )
-        groomer.password = data["password"]
+        try:
+            groomer = Groomer(
+                name=data["name"],
+                employee_number=data["employee_number"],
+                phone_number=data["phone_number"]
+            )
+            groomer.password = data["password"]
 
-        db.session.add(groomer)
-        db.session.commit()
+            db.session.add(groomer)
+            db.session.commit()
 
-        session["groomer_id"] = groomer.id
+            session["groomer_id"] = groomer.id
 
-        return GroomerSchema().dump(groomer), 201
+            return GroomerSchema().dump(groomer), 201
+
+        except ValueError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 400
+
+        except IntegrityError as e:
+            db.session.rollback()
+            if "UNIQUE constraint failed: groomers.employee_number" in str(e.orig):
+                return {"error": "Employee number already taken"}, 400
+            return {"error": "Something went wrong"}, 500
     
 
 
