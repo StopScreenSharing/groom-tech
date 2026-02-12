@@ -96,18 +96,22 @@ class Appointments(Resource):
         
         data = request.get_json()
 
-        appointment = Appointment(
-            date=date.fromisoformat(data["date"]),
-            service=data["service"],
-            note=data.get("note"),
-            dog_id=data["dog_id"],
-            groomer_id=groomer.id
-        )
+        try:
+            appointment = Appointment(
+                date=date.fromisoformat(data["date"]),
+                service=data["service"],
+                note=data.get("note"),
+                dog_id=data["dog_id"],
+                groomer_id=groomer.id
+            )
 
-        db.session.add(appointment)
-        db.session.commit()
+            db.session.add(appointment)
+            db.session.commit()
 
-        return AppointmentSchema().dump(appointment), 201
+            return AppointmentSchema().dump(appointment), 201
+        except ValueError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 400
     
 class AppointmentById(Resource):
     def get(self, id):
@@ -126,29 +130,37 @@ class AppointmentById(Resource):
         groomer = current_groomer()
         if not groomer:
             return {"error": "Not authorized"}, 401
-        
+
         appointment = Appointment.query.get(id)
 
         if not appointment or appointment.groomer_id != groomer.id:
             return {"error": "Appointment not found"}, 404
-        
+
         data = request.get_json()
 
-        if "date" in data:
-            appointment.date = date.fromisoformat(data["date"])
-        if "service" in data:
-            appointment.service = data["service"]
-        if "note" in data:
-            appointment.note = data["note"]
-        
-        db.session.commit()
+        try:
+            if "date" in data:
+                appointment.date = date.fromisoformat(data["date"])
+            if "service" in data:
+                appointment.service = data["service"]
+            if "note" in data:
+                appointment.note = data["note"]
 
-        return AppointmentSchema().dump(appointment), 200
+            db.session.commit()
+            return AppointmentSchema().dump(appointment), 200
+
+        except ValueError as e:
+            db.session.rollback()
+        return {"error": str(e)}, 400
+
+    
+    
+        
     
     def delete(self, id):
         groomer = current_groomer()
         if not groomer:
-            return {"error" "Not authorized"}, 401
+            return {"error": "Not authorized"}, 401
         
         appointment = Appointment.query.get(id)
 

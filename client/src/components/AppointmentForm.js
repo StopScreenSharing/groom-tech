@@ -3,7 +3,8 @@ import {
   Button,
   TextField,
   MenuItem,
-  Stack
+  Stack,
+  Alert
 } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -33,7 +34,7 @@ const AppointmentForm = ({ onSubmit }) => {
         dog_id: "",
       }}
       validationSchema={Yup.object({
-        date: Yup.string().required("Date is required"),
+        date: Yup.date().min(new Date().toISOString().split("T")[0], "Date cannot be in the past").required("Date is required"),
         service: Yup.string().required("Service is required"),
         dog_id: Yup.number().required("Dog is required"),
       })}
@@ -47,16 +48,23 @@ const AppointmentForm = ({ onSubmit }) => {
         handleBlur,
         handleSubmit,
         isSubmitting,
+        status,
       }) => (
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
 
-            {/* Date */}
+            {status && <Alert severity="error">
+                        {status}
+                        </Alert>}
+           
             <TextField
               type="date"
               name="date"
               label="Appointment Date"
               InputLabelProps={{ shrink: true }}
+              inputProps={{
+                min: new Date().toISOString().split("T")[0],
+              }}
               value={values.date}
               onChange={handleChange}
               onBlur={handleBlur}
