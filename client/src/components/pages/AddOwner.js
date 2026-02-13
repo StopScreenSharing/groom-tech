@@ -1,10 +1,9 @@
-import React from "react";
-import { Box, Button, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Box, Stack } from "@mui/material";
 import OwnerForm from "../OwnerForm";
 
 const AddOwner = () => {
-  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleSubmit = async (values, { setSubmitting }) => {
     const res = await fetch("/owners", {
@@ -17,22 +16,17 @@ const AddOwner = () => {
     setSubmitting(false);
 
     if (res.ok) {
-      navigate("/owners");
+      const owner = await res.json();
+      setSuccessMessage(owner.name);
+      setTimeout(() => setSuccessMessage(null), 2000);
     }
   };
 
   return (
     <Box sx={{ p: 4, display: "flex", justifyContent: "center" }}>
       <Stack spacing={2} sx={{ width: "100%", maxWidth: 400 }}>
-        
-        <Button
-          variant="outlined"
-          onClick={() => navigate("/owners")}
-        >
-          View Owners
-        </Button>
 
-        <OwnerForm onSubmit={handleSubmit} />
+        <OwnerForm onSubmit={handleSubmit} successMessage={successMessage} />
 
       </Stack>
     </Box>

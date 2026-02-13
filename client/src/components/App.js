@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -7,9 +7,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AddOwner from "./pages/AddOwner";
-import Owners from "./pages/Owners";
 import AddDog from "./pages/AddDog";
-import Dogs from "./pages/Dogs";
 import AddAppointment from "./pages/AddAppointment";
 
 import AppointmentDetail from "./pages/AppointmentDetail";
@@ -49,27 +47,11 @@ function App() {
         }
         />
 
-        <Route path="/owners"
-        element={
-          <ProtectedRoute>
-            <Owners />
-          </ProtectedRoute>
-        }
-        />
-
         <Route path="/owners/new" element={
             <ProtectedRoute >
                 <AddOwner />
             </ProtectedRoute>
           }
-        />
-
-        <Route path="/dogs"
-        element={
-          <ProtectedRoute>
-            <Dogs />
-          </ProtectedRoute>
-        } 
         />
 
         <Route path="/dogs/new" 

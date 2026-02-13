@@ -10,7 +10,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const DogForm = ({ onSuccess }) => {
+const DogForm = ({ onSuccess, successMessage }) => {
   const [owners, setOwners] = useState([]);
   const [error, setError] = useState(null);
 
@@ -40,8 +40,9 @@ const DogForm = ({ onSuccess }) => {
         setSubmitting(false);
 
         if (res.ok) {
+          const dog = await res.json();
           resetForm();
-          onSuccess?.();
+          onSuccess?.(dog);
         } else {
           setError("Failed to add dog");
         }
@@ -115,6 +116,12 @@ const DogForm = ({ onSuccess }) => {
           >
             Add Dog
           </Button>
+
+          {successMessage && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {successMessage} was successfully added
+            </Alert>
+          )}
         </Box>
       )}
     </Formik>

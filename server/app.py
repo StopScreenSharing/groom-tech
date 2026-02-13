@@ -18,7 +18,8 @@ from schemas import (
     GroomerSchema,
     OwnerSchema,
     DogSchema,
-    AppointmentSchema
+    AppointmentSchema,
+    DogDropdownSchema
 )
 from datetime import date
 
@@ -210,20 +211,15 @@ class Owners(Resource):
 
         return OwnerSchema().dump(owner), 201
 
-class Dogs(Resource):
+class Dogs(Resource): 
     def get(self):
         groomer = current_groomer()
         if not groomer:
             return {"error": "Not authorized"}, 401
-        
-        show_all = request.args.get("all")
 
-        if show_all == "true":
-            dogs = Dog.query.all()
-        else: 
-            dogs = groomer.dogs
-        return DogSchema(many=True).dump(dogs), 200
-    
+        dogs = Dog.query.all()
+        return DogDropdownSchema(many=True).dump(dogs), 200
+
     def post(self):
         groomer = current_groomer()
         if not groomer:

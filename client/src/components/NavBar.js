@@ -22,7 +22,6 @@ const NavBar = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        {/* App Title */}
         <Typography
           variant="h6"
           sx={{ flexGrow: 1 }}
@@ -33,7 +32,6 @@ const NavBar = () => {
           GroomTech
         </Typography>
 
-        {/* Logged OUT links */}
         {!groomer && (
           <>
             <Button color="inherit" component={Link} to="/login">
@@ -45,7 +43,6 @@ const NavBar = () => {
           </>
         )}
 
-        {/* Logged IN links */}
         {groomer && (
           <Box sx={{ display: "flex", gap: 1 }}>
             <Button color="inherit" component={Link} to="/">

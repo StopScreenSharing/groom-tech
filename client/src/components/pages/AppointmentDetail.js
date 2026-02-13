@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { AppContext } from "../../AppContext";
 import {
   Box,
   Typography,
@@ -36,6 +37,7 @@ const AppointmentSchema = Yup.object({
 const AppointmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { setGroomer } = useContext(AppContext);
 
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -57,8 +59,36 @@ const AppointmentDetail = () => {
   const handleDelete = () => {
     fetch(`/appointments/${id}`, {
       method: "DELETE",
-      credentials: "include"
-    }).then(() => navigate("/"));
+      credentials: "include",
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Delete failed");
+
+        setGroomer((prevGroomer) => {
+          const dogs = prevGroomer.dogs || [];
+          const dogId = appointment.dog?.id;
+
+          const updatedDogs = dogs
+            .map((dog) => {
+              if (dog.id !== dogId) return dog;
+
+              const remainingAppointments = dog.appointments.filter(
+                (apt) => apt.id != id
+              );
+
+              if (remainingAppointments.length === 0) {
+                return null;
+              }
+              return { ...dog, appointments: remainingAppointments };
+            })
+            .filter((dog) => dog !== null);
+
+          return { ...prevGroomer, dogs: updatedDogs };
+        });
+
+        navigate("/");
+      })
+      .catch(() => alert("Could not delete appointment"));
   };
 
   if (loading) {
@@ -113,6 +143,30 @@ const AppointmentDetail = () => {
                     }
 
                     setAppointment(data);
+
+                    setGroomer((prevGroomer) => {
+                      const dogs = prevGroomer.dogs || [];
+                      const dogId = data.dog?.id;
+
+                      const updatedDogs = dogs.map((dog) => {
+                        if (dog.id !== dogId) return dog;
+
+                        const updatedAppointments = dog.appointments.map((apt) =>
+                          apt.id == id
+                            ? {
+                                id: data.id,
+                                date: data.date,
+                                service: data.service,
+                                note: data.note,
+                              }
+                            : apt
+                        );
+                        return { ...dog, appointments: updatedAppointments };
+                      });
+
+                      return { ...prevGroomer, dogs: updatedDogs };
+                    });
+
                     setEditing(false);
                   })
                   .catch((err) => {

@@ -1,21 +1,23 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../AppContext";
-import {
-  Box,
-  Typography,
-  Grid,
-  Button
-} from "@mui/material";
-
+import { Box, Typography, Grid, Button } from "@mui/material";
 import AppointmentCard from "../AppointmentCard";
 
 const Home = () => {
   const { groomer } = useContext(AppContext);
+  const [selectedDogId, setSelectedDogId] = useState(null);
   const [selectedDog, setSelectedDog] = useState(null);
 
-  if (!groomer) {
-    return <Typography>Loading...</Typography>;
-  }
+  useEffect(() => {
+    if (groomer && selectedDogId) {
+      const dog = groomer.dogs.find((d) => d.id === selectedDogId);
+      setSelectedDog(dog || null);
+    } else {
+      setSelectedDog(null);
+    }
+  }, [groomer, selectedDogId]);
+
+  if (!groomer) return <Typography>Loading...</Typography>;
 
   return (
     <Box sx={{ p: 4 }}>
@@ -23,10 +25,9 @@ const Home = () => {
         Welcome, {groomer.name}
       </Typography>
 
-      {/* SHOW DOGS */}
       {!selectedDog && (
         <>
-          <Typography variant="h5" mb={2}>
+          <Typography variant="h5" mb={5}>
             Your Dogs
           </Typography>
 
@@ -41,20 +42,16 @@ const Home = () => {
                   md={6}
                   lg={4}
                   key={dog.id}
-                  onClick={() => setSelectedDog(dog)}
+                  onClick={() => setSelectedDogId(dog.id)}
                   sx={{
                     cursor: "pointer",
                     border: "1px solid #ddd",
                     borderRadius: 2,
                     p: 2,
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5"
-                    }
+                    "&:hover": { backgroundColor: "#262630" },
                   }}
                 >
-                  <Typography variant="h6">
-                    {dog.name}
-                  </Typography>
+                  <Typography variant="h6">{dog.name}</Typography>
                 </Grid>
               ))}
             </Grid>
@@ -62,14 +59,9 @@ const Home = () => {
         </>
       )}
 
-      {/* SHOW APPOINTMENTS */}
       {selectedDog && (
         <Box sx={{ mt: 4 }}>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDog(null)}
-            sx={{ mb: 2 }}
-          >
+          <Button variant="outlined" onClick={() => setSelectedDogId(null)} sx={{ mb: 2 }}>
             Back to Dogs
           </Button>
 
@@ -95,3 +87,4 @@ const Home = () => {
 };
 
 export default Home;
+

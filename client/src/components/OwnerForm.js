@@ -1,15 +1,15 @@
 import React from "react";
 import {
-  Box,
   Button,
   TextField,
   Typography,
-  Paper
+  Paper,
+  Alert
 } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-const OwnerForm = ({ onSubmit }) => {
+const OwnerForm = ({ onSubmit, successMessage }) => {
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400 }}>
       <Typography variant="h6" mb={2}>
@@ -69,6 +69,12 @@ const OwnerForm = ({ onSubmit }) => {
             >
               Add Owner
             </Button>
+
+            {successMessage && (
+              <Alert severity="success" sx={{ mt: 2 }}>
+                {successMessage} was successfully added
+              </Alert>
+            )}
           </form>
         )}
       </Formik>

@@ -11,10 +11,10 @@ export const AppProvider = ({ children }) => {
             const res = await fetch("/check_session", {
                 credentials: "include",
             });
-            console.log("check_session response:", res);
+            // console.log("check_session response:", res);
             if (res.ok) {
                 const data = await res.json();
-                console.log("check_session JSON:", data);
+                // console.log("check_session JSON:", data);
                 setGroomer(data);
             } else {
                 setGroomer(null);
@@ -77,7 +77,7 @@ export const AppProvider = ({ children }) => {
 
     return (
         <AppContext.Provider
-        value={{ groomer, loading, login, signup, logout }}
+        value={{ groomer, setGroomer, loading, login, signup, logout }}
         >
             {children}
         </AppContext.Provider>

@@ -38,6 +38,15 @@ class DogSchema(ma.SQLAlchemyAutoSchema):
     owner = fields.Nested("OwnerSchema", only=("id", "name"))
     appointments = fields.Nested("AppointmentSchema", many=True, exclude=("dog",))
 
+class DogDropdownSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Dog
+        load_instance = True
+        exclude = ("breed", "appointments")
+    
+    id = ma.auto_field()
+    name = ma.auto_field()
+    owner = fields.Nested("OwnerSchema", only=("name", "phone_number"))
 
 class GroomerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:

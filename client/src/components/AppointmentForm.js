@@ -20,8 +20,8 @@ const AppointmentForm = ({ onSubmit }) => {
   const [dogs, setDogs] = useState([]);
 
   useEffect(() => {
-    fetch("/dogs?all=true", { credentials: "include" })
-      .then(r => r.json())
+    fetch("/dogs", { credentials: "include" })
+      .then((r) => r.json())
       .then(setDogs);
   }, []);
 
@@ -72,7 +72,6 @@ const AppointmentForm = ({ onSubmit }) => {
               helperText={touched.date && errors.date}
             />
 
-            {/* Service */}
             <TextField
               select
               name="service"
@@ -90,7 +89,6 @@ const AppointmentForm = ({ onSubmit }) => {
               ))}
             </TextField>
 
-            {/* Dog */}
             <TextField
               select
               name="dog_id"
@@ -103,12 +101,11 @@ const AppointmentForm = ({ onSubmit }) => {
             >
               {dogs.map(dog => (
                 <MenuItem key={dog.id} value={dog.id}>
-                  {dog.name} ({dog.owner?.name})
+                  {dog.name} ({dog.owner.name}) ({dog.owner.phone_number})
                 </MenuItem>
               ))}
             </TextField>
 
-            {/* Note */}
             <TextField
               multiline
               rows={3}
