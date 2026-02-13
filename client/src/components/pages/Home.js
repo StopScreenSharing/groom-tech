@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AppContext } from "../../AppContext";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import AppointmentCard from "../AppointmentCard";
