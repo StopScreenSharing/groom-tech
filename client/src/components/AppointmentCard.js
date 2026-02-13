@@ -32,13 +32,13 @@ const AppointmentCard = ({ appointment }) => {
                         {new Date(appointment.date).toLocaleDateString()}
                     </Typography>
 
-                    <Typography>
+                    {/* <Typography>
                         Dog: {appointment.dog?.name}
                     </Typography>
 
                     <Typography>
                         Owner: {appointment.dog?.owner?.name}
-                    </Typography>
+                    </Typography> */}
 
                     {appointment.note && (
                         <Typography variant="body2" color="text.secondary">
