@@ -37,24 +37,42 @@ const AppointmentSchema = Yup.object({
 const AppointmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { setGroomer } = useContext(AppContext);
+  const { groomer, setGroomer } = useContext(AppContext);
 
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
-
+  
   useEffect(() => {
-    fetch(`/appointments/${id}`, { credentials: "include" })
-      .then((r) => {
-        if (!r.ok) throw new Error("Not found");
-        return r.json();
-      })
-      .then((data) => {
-        setAppointment(data);
-        setLoading(false);
-      })
-      .catch(() => navigate("/", { replace: true }));
-  }, [id, navigate]);
+  if (!groomer) return;
+
+  let foundAppointment = null;
+
+  for (const dog of groomer.dogs || []) {
+    const match = dog.appointments?.find(
+      (apt) => String(apt.id) === id
+    );
+
+    if (match) {
+      foundAppointment = {
+        ...match,
+        dog: dog,          
+        owner: dog.owner,
+      };
+      break;
+    }
+  }
+
+  if (!foundAppointment) {
+    navigate("/", { replace: true });
+    return;
+  }
+
+  setAppointment(foundAppointment);
+  setLoading(false);
+}, [groomer, id, navigate]);
+
+
 
   const handleDelete = () => {
     fetch(`/appointments/${id}`, {

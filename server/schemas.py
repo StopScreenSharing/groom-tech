@@ -12,6 +12,7 @@ class AppointmentSchema(ma.SQLAlchemyAutoSchema):
     date = ma.auto_field()
     service = ma.auto_field()
     note = ma.auto_field()
+    dog_id = ma.auto_field()
 
     dog = fields.Nested("DogSchema")
 

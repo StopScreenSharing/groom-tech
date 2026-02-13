@@ -91,16 +91,16 @@ class Logout(Resource):
         return {}, 204
 
 class Appointments(Resource):
-    def get(self):
-        groomer = current_groomer()
-        if not groomer:
-            return {"error": "Not authorized"}, 401
+    # def get(self):
+    #     groomer = current_groomer()
+    #     if not groomer:
+    #         return {"error": "Not authorized"}, 401
         
-        appointments = Appointment.query.filter_by(
-            groomer_id=groomer.id
-        ).all()
+    #     appointments = Appointment.query.filter_by(
+    #         groomer_id=groomer.id
+    #     ).all()
 
-        return AppointmentSchema(many=True).dump(appointments), 200
+    #     return AppointmentSchema(many=True).dump(appointments), 200
     
     def post(self):
         groomer = current_groomer()
